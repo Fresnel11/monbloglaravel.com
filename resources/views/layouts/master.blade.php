@@ -5,7 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Mon blog Laravel</title>
+    <title>
+        @yield('title', 'Mon Blog Laravel')
+    </title>
 
 
 
@@ -18,12 +20,17 @@
         <nav>
             <ul>
                 <li>
+                    <a href="/">Acceuil</a>
+                </li>
+                <li>
                     <a href="/contact-us">Contactez-nous</a>
                 </li>
                 <li>
                     <a href="/about">A propos</a>
                 </li>
-                
+                <li>
+                    <a href="/articles">Articles</a>
+                </li>
             </ul>
         </nav>
     </header>
