@@ -13,14 +13,25 @@
 </head>
 
 <body>
-    <h1>Mon blog Laravel</h1>
-
-    <p>
-        <a href="/contact-us">Contactez-nous</a>
-    </p>
-    <!--Contenu de toutes les pages ici -->
-    @yield('contenu')
-    <!--Contenu de toutes les pages ici -->
+    <header>
+        <h1>Mon blog Laravel</h1>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/contact-us">Contactez-nous</a>
+                </li>
+                <li>
+                    <a href="/about">A propos</a>
+                </li>
+                
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!--Contenu de toutes les pages ici -->
+        @yield('contenu')
+        <!--Contenu de toutes les pages ici -->
+    </main>
 </body>
 
 </html>
