@@ -7,8 +7,8 @@
 @section('contenu')
     <h2>Articles</h2>
     @forelse ($articles as $article)
-        @include('layouts.articles.index')
+        @include('articles.index')
     @empty
-        @include('layouts.articles.no-articles')
+        @include('articles.no-articles')
     @endforelse
 @endsection
