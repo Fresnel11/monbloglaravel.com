@@ -13,20 +13,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = [
-            [
-                "title" => "Titre article 1",
-                "body" => "Contenu de l'article 1"
-            ],
-            [
-                "title" => "Titre article 2",
-                "body" => "Contenu de l'article 2"
-            ],
-            [
-                "title" => "Titre article 3",
-                "body" => "Contenu de l'article 3"
-            ],
-            ];
+        $articles = Article::all();
+            
         return view('layouts.articles', ['articles' => $articles]);
     }
 
@@ -52,9 +40,10 @@ class ArticleController extends Controller
      * Display the specified resource.
      * Affiche une ressource spécifique
      */
-    public function show(Article $article)
+    public function show($id)
     {
-        //
+        $article = Article::where("id", $id)->with("comments")->first();
+      return view('articles.show', ['article' => $article]);
     }
 
     /**
