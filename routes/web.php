@@ -30,6 +30,8 @@ Route::controller(PagesController::class)->group(function(){
 
 Route::controller(ArticleController::class)->group(function(){
     Route::get('/articles', 'index');
+    Route::post('/article', 'store');
+    Route::get('/article/create', 'create');
     Route::get('/article/{article}', 'show');
 });
 /*Methode de routes recommadé*/

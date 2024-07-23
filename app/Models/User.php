@@ -41,4 +41,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // Un utilisateurs peut écrire plusieurs articles
+     public function articles() {
+        return $this->hasMany(Article::class);
+     }
+
+     public function comments() {
+        return $this->hasMany(comment::class);
+     }
 }

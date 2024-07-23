@@ -20,7 +20,7 @@
 <body>
     <header>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
                 <h1>
                     <a class="navbar-brand" href="/">Mon blog Laravel</a>

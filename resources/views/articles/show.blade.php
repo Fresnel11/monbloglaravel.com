@@ -6,6 +6,7 @@
             <h2 class="card-title">
                 {{ $article['title'] }}
             </h2>
+            {{-- <small>Auteur : <strong>{{$article->user->name}}</strong>créé le {{$article->created_at->todateString()}} </small> --}}
             <p class="card-text ">{{ $article['body'] }}</p>
         </div>
     </article>
@@ -31,11 +32,12 @@
         <div>
            @forelse ($article->comments as $comment)
                 <p>
-                    <strong class="text-primary">
-                        User id : {{$comment->user_id}}
-                    </strong>
+                    <span class="badge text-primary">
+                        {{$comment->user->name}}
+                    </span>
+                   
                 </p>
-               <p>{{$comment["comment"]}}</p>
+               <small>{{$comment["comment"]}}</small>
            @empty
               <p>Aucun commentaire trouvé</p> 
            @endforelse

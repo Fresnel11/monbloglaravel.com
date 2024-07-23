@@ -21,4 +21,8 @@ class Article extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function user_error() {
+        return $this->belongsTo(User::class);
+    }
 };
