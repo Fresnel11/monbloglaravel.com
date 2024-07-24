@@ -1,7 +1,9 @@
 @extends('layouts.master')
 @section('contenu')
     <article class="card mb-3">
-        <img src="{{ $article['image'] }}" alt="" class="card-img-top">
+        @if ($article->image)
+        <img src="{{ asset('storage/' . $article->image) }}" alt="" class="card-img-top">
+        @endif
         <div class="card-body">
             <h2 class="card-title">
                 {{ $article['title'] }}

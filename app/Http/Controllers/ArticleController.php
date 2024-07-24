@@ -14,7 +14,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
+        // $articles = Article::orderByDesc('created_at')->get();
+        $articles = Article::latest()->paginate(2);
             
         return view('layouts.articles', ['articles' => $articles]);
     }
@@ -39,14 +40,17 @@ class ArticleController extends Controller
         if ($request->hasFile('image')) {
             $path = $request
             ->file('image')
-            ->store('/images');
+            ->store('images', 'public');
             $validated['image'] = $path;
         }
+
+        $validated['user_id'] = 1;
         // Envoyé l'article dans la BDD
         Article::create($validated);
 
         // retourne sur la page des articles 
-        return redirect('/articles')->with('sucess', 'Article créé avec succès !');
+        return redirect('/articles')
+        ->with('success', 'Article créé avec succès !');
         // dd($validated);
     }
 

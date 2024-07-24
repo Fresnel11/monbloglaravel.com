@@ -22,6 +22,6 @@ class Comment extends Model
 
     // Un user peut créer plusieurs commentaire
     public function user() {
-        return $this->belongsTo(user::class);
+        return $this->belongsTo(User::class);
     }
 }

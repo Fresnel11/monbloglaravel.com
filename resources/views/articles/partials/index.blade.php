@@ -1,5 +1,5 @@
 <article class="card mb-3">
-    <img src="{{ $article['image'] }}" alt="" class="card-img-top">
+    <img src="{{ asset('storage/' . $article->image) }}" alt="" class="card-img-top">
     <div class="card-body">
         <h2 class="card-title">
             <a href="/article/{{ $article['id'] }}">
