@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreArticleRequest;
+use App\Http\Requests\UpdatearticleRequest;
 use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 
 class ArticleController extends Controller
 {
@@ -14,8 +18,11 @@ class ArticleController extends Controller
      */
     public function index()
     {
+        if (!Auth::user()) {
+            return view('auth.register');
+        }
         // $articles = Article::orderByDesc('created_at')->get();
-        $articles = Article::latest()->paginate(2);
+        $articles = Article::latest()->paginate(5);
             
         return view('layouts.articles', ['articles' => $articles]);
     }
@@ -49,7 +56,7 @@ class ArticleController extends Controller
         Article::create($validated);
 
         // retourne sur la page des articles 
-        return redirect('/articles')
+        return redirect()->route('articles.index')
         ->with('success', 'Article créé avec succès !');
         // dd($validated);
     }
@@ -71,16 +78,36 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        return view('articles.edit', ['article'=>$article]);
     }
 
     /**
      * Update the specified resource in storage.
      * Mettre à jour une ressource spécifique dans la base de donnée
      */
-    public function update(Request $request, Article $article)
+    public function update(UpdatearticleRequest $request, Article $article)
     {
-        //
+        // Les données validées sont déjà disponible
+        // via le UpdatearticleRequest
+        $validated = $request->validated();
+
+        // Gestiion de l'image
+
+        if ($request->hasFile('image')){
+            Storage::disk("public")->delete($article->image);
+            // Si on a une image 
+            // Supprimer l'ancienne image si elle existe
+            // Stocker la nouvelle image
+            $path = $request->file('image')->store('images', 'public');
+            $validated['image'] = $path;
+        }else{
+            // Garde l'image existante si aucune nouvelle 
+            // image n'est téléchargé
+            $validated['image'] = $article->image;
+        }
+
+        $article->update($validated);
+        return redirect()->route('articles.show' , $article->id)->with('success', 'Article modifié avec succès');
     }
 
     /**
@@ -88,6 +115,13 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        //
+        if ($article->image) {
+            Storage::disk('public')->delete($article->image);
+        }
+        // Supprimer l'article de la BDD
+        $article->delete();
+        // Rediriger vers la liste des articles
+        // avec un message de succès !
+        return redirect()->route('articles.index')->with('success', 'Article supprimé avec succès !');
     }
 }

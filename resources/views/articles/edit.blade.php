@@ -5,8 +5,10 @@
 @endsection
 
 @section('contenu')
-    <form method="POST" action="{{route('articles.store')}}" enctype="multipart/form-data">
+    <form method="POST" action="{{route('articles.update', $article->id)}}" enctype="multipart/form-data">
         @csrf
+        @method('patch')
+
         @if ($errors->any())
             <div class="alert alert-danger">
                 @foreach ($errors->all() as $error)
@@ -18,7 +20,7 @@
         <div class="mb-3">
             <label for="title" class="form-label">Titre de l'article</label>
             <input type="text" class="form-control @error('title') is-invalid @enderror" name="title"
-                aria-describedby="emailHelp" value="{{old('title')}}">
+                aria-describedby="emailHelp" value="{{old('title', $article->title )}}">
             {{-- Message d'erreur pour le titre --}}
             @error('title')
                 <div class="invalid-feedback">
@@ -28,7 +30,7 @@
         </div>
         <div class="mb-3 form-floating">
             <textarea class="form-control @error('body') is-invalid @enderror" placeholder="Entrez le contenu de l'article"
-                name="body" style="height: 300px" id="body">{{old('body')}}</textarea>
+                name="body" style="height: 300px" id="body">{{old('body', $article->body)}}</textarea>
             <label for="body">Corps de l'article</label>
             {{-- Message d'erreur pour le body --}}
             @error('body')
@@ -39,6 +41,14 @@
         </div>
         <div class="mb-3 form-check">
             <label for="image">Choisir une image pour l'article</label>
+            @if ($article->image)
+                <img 
+                src="{{asset('storage/' . $article->image)}}"
+                alt="Image de l'article"
+                class="img-thumbnail mb-3"
+                width="200"
+                >
+            @endif
             <input class="form-control" type="file" id="image" name="image">
         </div>
         <button type="submit" class="btn btn-primary">Envoyer</button>
