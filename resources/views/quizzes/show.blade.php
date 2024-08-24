@@ -7,20 +7,20 @@
             </div>
         @endif
         @if ($article->image)
-            <img src="{{ asset('storage/' . $article->image) }}" alt="" class="card-img-top">
+            <img src="{{ asset('storage/' .  $quizzes->image) }}" alt="" class="card-img-top">
         @endif
         <div class="card-body">
             <h2 class="card-title">
-                {{ $article['title'] }}
-                <a class="btn btn-sm btn-warning ml-3" href="/articles/{{ $article->id }}/edit">Modifié l'article</a>
-                <form action="{{ route('articles.destroy', $article->id) }}" method="POST">
+                {{  $quizzes['title'] }}
+                <a class="btn btn-sm btn-warning ml-3" href="/articles/{{  $quizzes->id }}/edit">Modifié l'article</a>
+                <form action="{{ route('quizzes.destroy',  $quizzes->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button class="btn btn-sm btn-danger ml-3">Supprimé l'article</button>
                 </form>
             </h2>
             {{-- <small>Auteur : <strong>{{$article->user->name}}</strong>créé le {{$article->created_at->todateString()}} </small> --}}
-            <p class="card-text ">{{ $article['body'] }}</p>
+            <p class="card-text ">{{ $quizzes['body'] }}</p>
         </div>
     </article>
 
@@ -39,7 +39,7 @@
                 </button>
             </form>
             <div>
-                @forelse ($article->comments as $comment)
+                @forelse ($quizzes->comments as $comment)
                     <p>
                         <span class="badge text-primary">
                             {{ $comment->user->name }}

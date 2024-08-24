@@ -1,28 +1,28 @@
 @extends('layouts.master')
 
 @section('title')
-    Article
+    QUIZZ CODE 
 @endsection
 
 @section('contenu')
-    <h2>Articles</h2>
-    @if (session('success'))
+    <h2>QUIZZS</h2>
+    {{-- @if (session('success'))
         <div class="alert alert-success">
             {{session('success')}}
         </div>
-    @endif
-    <p>
+    @endif --}}
+    {{-- <p>
         <a href="/article/create" class="btn btn-primary">Créer un article</a>
-    </p>
-    @forelse ($articles as $article)
-        @include('articles.partials.index')
+    </p> --}}
+    @forelse ($quizzes as $quizze)
+        @include('quizzes.partials.index')
      
     @empty
-        @include('articles.partials.no-articles')
+        @include('quizzes.partials.no-quizz')
     @endforelse
        {{-- Liens de Pagination --}}
        <div class="d-flex justify-content-center">
-        {{$articles->links()}}
+        {{-- {{$quizzes->links()}} --}}
     </div>
 @endsection
  

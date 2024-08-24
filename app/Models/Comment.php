@@ -17,7 +17,7 @@ class Comment extends Model
     // Un commentaire est fait sur un seul article
     public function article()
     {
-        return $this->belongsTo(Article::class);
+        return $this->belongsTo(Quiz::class);
     }
 
     // Un user peut créer plusieurs commentaire

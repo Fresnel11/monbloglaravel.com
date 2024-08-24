@@ -5,7 +5,7 @@
 @endsection
 
 @section('contenu')
-    <form method="POST" action="{{route('articles.store')}}" enctype="multipart/form-data">
+    <form method="POST" action="{{route('quizzes.store')}}" enctype="multipart/form-data">
         @csrf
         @if ($errors->any())
             <div class="alert alert-danger">

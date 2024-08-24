@@ -30,7 +30,7 @@ class RegisterController extends Controller
         $user = User::where('email', $validated["email"])->firstorFail();
         Auth::login($user);
         // rediriger l'utilisateur
-        return redirect()->route('articles.index');
+        return redirect()->route('quizzes.index');
         // dd($validated);
     }
 }

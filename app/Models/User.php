@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     // Un utilisateurs peut écrire plusieurs articles
      public function articles() {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Quiz::class);
      }
 
      public function comments() {

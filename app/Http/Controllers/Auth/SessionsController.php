@@ -27,13 +27,13 @@ class SessionsController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
- 
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
- 
-            return redirect()->route('articles.index');
+
+            return redirect()->route('quizzes.index');
         }
- 
+
         return back()->withErrors([
             'email' => 'Vos identifiants sont incorrect',
         ])->onlyInput('email');
@@ -51,7 +51,12 @@ class SessionsController extends Controller
         Auth::logout();
 
         return redirect()->route('logout')
-        ->with('success', 'Vous êtes déconnecté !');
+            ->with('success', 'Vous êtes déconnecté !');
+    }
 
+    public function editProfile()
+    {
+        Auth::editProfile();
+        return view();
     }
 }

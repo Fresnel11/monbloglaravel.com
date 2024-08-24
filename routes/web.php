@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SessionsController;
 use App\Http\Controllers\Auth\LoginController;
@@ -28,19 +28,19 @@ use Illuminate\Support\Facades\Route;
 
 /*Methode de routes recommadé*/
 Route::controller(PagesController::class)->group(function(){
-    Route::get('/', 'index');
+    Route::get('/', 'acceuil');
     Route::get('/contact-us', 'contact');
     Route::get('/about', 'about');
 });
 
-Route::controller(ArticleController::class)->group(function(){
-    Route::get('/articles', 'index')->name('articles.index');
-    Route::get('/article/create', 'create')->name('articles.create')->middleware('auth');
-    Route::post('/article', 'store')->name('articles.store')->middleware('auth');
-    Route::get('/articles/{articles}', 'show')->name('articles.show');
-    Route::get('/articles/{article}/edit', 'edit')->name('articles.edit')->middleware('auth');
-    Route::patch('/articles/{article}', 'update')->name('articles.update')->middleware('auth');
-    Route::delete('/articles/{article}', 'destroy')->name('articles.destroy')->middleware('auth');
+Route::controller(QuizController::class)->group(function(){
+    Route::get('/quizzes', 'index')->name('quizzes.index');
+    Route::get('/quizzes/create', 'create')->name('quiizzes.create')->middleware('auth');
+    Route::post('/quizzes', 'store')->name('quizzes.store')->middleware('auth');
+    Route::get('/quizzes/{quizze}', 'show')->name('quizzes.show');
+    Route::get('/quizzes/{quizze}/edit', 'edit')->name('quizzes.edit')->middleware('auth');
+    Route::patch('/quizzes/{quizze}', 'update')->name('quizzes.update')->middleware('auth');
+    Route::delete('/quizzes/{quizze}', 'destroy')->name('quizzes.destroy')->middleware('auth');
 });
 /*Methode de routes recommadé*/
 
@@ -56,3 +56,5 @@ Route::get('/logout', [SessionsController::class, 'logout'])->name('logout')->mi
 Route::get('/profile', [UserController::class, 'index'])->name('profile')->middleware('auth');
 // Route::get('/login', [SessionsController::class, 'login']);
 // Route::get('/register', [LoginController::class, 'authenticate'])->name('authenticate');
+Route::delete('/user/delete', [UserController::class, 'destroy'])->middleware('auth')->name('user.destroy');
+Route::patch('/user/update', [UserController::class, 'update'])->middleware('auth')->name('user.update');
