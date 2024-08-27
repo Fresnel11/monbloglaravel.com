@@ -8,8 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Quizzes extends Model
 {
     use HasFactory;
-
     protected $fillable = ['question', 'image', 'correct_answer', 'explanation'];
-
-    
-};
+}

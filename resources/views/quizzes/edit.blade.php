@@ -1,56 +1,49 @@
 @extends('layouts.master')
 
-@section('title')
-    Créer un article
-@endsection
-
 @section('contenu')
-    <form method="POST" action="{{route('articles.update', $article->id)}}" enctype="multipart/form-data">
-        @csrf
-        @method('patch')
+<div class="container">
+    <h1>Modifier le Quiz</h1>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </div>
-        @endif
-        {{-- Cross Site Ressource Forgery --}}
-        <div class="mb-3">
-            <label for="title" class="form-label">Titre de l'article</label>
-            <input type="text" class="form-control @error('title') is-invalid @enderror" name="title"
-                aria-describedby="emailHelp" value="{{old('title', $article->title )}}">
-            {{-- Message d'erreur pour le titre --}}
-            @error('title')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+    <form action="{{ route('quizzes.update', $quizzes->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PATCH')
+
+        <div class="form-group">
+            <label for="question">Question</label>
+            <input type="text" name="question" id="question" class="form-control" value="{{ old('question', $quizzes->question) }}" required>
+            @error('question')
+                <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <div class="mb-3 form-floating">
-            <textarea class="form-control @error('body') is-invalid @enderror" placeholder="Entrez le contenu de l'article"
-                name="body" style="height: 300px" id="body">{{old('body', $article->body)}}</textarea>
-            <label for="body">Corps de l'article</label>
-            {{-- Message d'erreur pour le body --}}
-            @error('body')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" name="image" id="image" class="form-control">
+            @error('image')
+                <div class="text-danger">{{ $message }}</div>
             @enderror
-        </div>
-        <div class="mb-3 form-check">
-            <label for="image">Choisir une image pour l'article</label>
-            @if ($article->image)
-                <img 
-                src="{{asset('storage/' . $article->image)}}"
-                alt="Image de l'article"
-                class="img-thumbnail mb-3"
-                width="200"
-                >
+            @if($quizzes->image)
+                <img src="{{ asset('storage/' . $quizzes->image) }}" alt="Image" style="width: 100px; margin-top: 10px;">
             @endif
-            <input class="form-control" type="file" id="image" name="image">
         </div>
-        <button type="submit" class="btn btn-primary">Envoyer</button>
+
+        <div class="form-group">
+            <label for="correct_answer">Réponse Correcte</label>
+            <input type="text" name="correct_answer" id="correct_answer" class="form-control" value="{{ old('correct_answer', $quizzes->correct_answer) }}" required>
+            @error('correct_answer')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label for="explanation">Explication (Optionnelle)</label>
+            <textarea name="explanation" id="explanation" class="form-control">{{ old('explanation', $quizzes->explanation) }}</textarea>
+            @error('explanation')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn btn-primary">Mettre à Jour le Quiz</button>
     </form>
+</div>
 @endsection

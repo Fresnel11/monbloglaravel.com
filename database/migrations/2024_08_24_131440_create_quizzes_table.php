@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('question');
             $table->boolean('correct_answer'); // 1 pour vrai, 0 pour faux
-            $table->string('explanation'); // Explication en cas de mauvaise réponse
+            $table->string('explanation')->nullable(); // Explication en cas de mauvaise réponse
             $table->timestamps();
         });
     }

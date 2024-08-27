@@ -25,7 +25,7 @@ class StoreQuizzRequest extends FormRequest
             'question' => "required|string|max:255",
             'image' => 'nullable|image|mimes:jpeg,png,gif"',
             'correct_answer' => "required|string",
-            'explanation' => "required|string|max:255",
+            'explanation' => "nullable|string|max:255",
             // 'image' => "nullable|image|mimes:jpeg,png,gif|max:2048",
         ];
     }

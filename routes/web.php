@@ -38,9 +38,9 @@ Route::controller(QuizController::class)->group(function(){
     Route::get('/quizzes/create', 'create')->name('quizzes.create')->middleware('auth');
     Route::post('/quizzes', 'store')->name('quizzes.store')->middleware('auth');
     Route::get('/quizzes/show', 'show')->name('quizzes.show');
-    Route::get('/quizzes/{quizze}/edit', 'edit')->name('quizzes.edit')->middleware('auth');
-    Route::patch('/quizzes/{quizze}', 'update')->name('quizzes.update')->middleware('auth');
-    Route::delete('/quizzes/{quizze}', 'destroy')->name('quizzes.destroy')->middleware('auth');
+    Route::get('/quizzes/{id}/edit', 'edit')->name('quizzes.edit')->middleware('auth');
+    Route::patch('/quizzes/{id}', 'update')->name('quizzes.update')->middleware('auth');
+    Route::delete('/quizzes/{id}', 'destroy')->name('quizzes.destroy')->middleware('auth');
 });
 
 
