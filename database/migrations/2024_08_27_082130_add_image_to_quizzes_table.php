@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quizzes', function (Blueprint $table) {
-            $table->id();
-            $table->string('question');
-            $table->boolean('correct_answer'); // 1 pour vrai, 0 pour faux
-            $table->string('explanation'); // Explication en cas de mauvaise réponse
-            $table->timestamps();
+        Schema::table('quizzes', function (Blueprint $table) {
+            $table->string('image')->nullable(); // URL ou chemin de l'image
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('quizzes');
+        Schema::table('quizzes', function (Blueprint $table) {
+           
+        });
     }
 };

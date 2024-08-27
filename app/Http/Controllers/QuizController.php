@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateQuizzRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Quiz;
+use App\Models\Quizzes;
 
 
 class QuizController extends Controller
@@ -18,27 +18,15 @@ class QuizController extends Controller
      */
     public function index(Request $request)
     {
-
-        // $quizzes = [
-        //     ['title' => 'HTML', 'descripton' => 'L\'HTML est un langage de programmation.' ]
-        // ];
-
-        $quizzes = [
-            ['title' => 'titre article 1', 'body' => 'Contenu de l\'article 1'],
-            ['title' => 'titre article 2', 'body' => 'Contenu de l\'article 2'],
-            ['title' => 'titre article 3', 'body' => 'Contenu de l\'article 3'],
-        ];
         if (!Auth::user()) {
             return view('auth.register');
         }
-
-        // $count = $request->input('count', 5); // Default to 5 if not provided
-        // $quizzes = Quiz::inRandomOrder()->limit($count)->get();
-        return view('layouts.quizzes', ['quizzes' => $quizzes]);
+        // Sélectionne 10 Quizz a afficher de manière aléatoire 
+        $quizzes = Quizzes::inRandomOrder()->limit(10)->get();
+        return view('quizzes.partials.index', compact('quizzes'));
+        // return view('layouts.quizzes', ['quizzes' => $quizzes]);
         
         // $articles = Quiz::latest()->paginate(5);
-            
-        
     }
 
     /**
@@ -47,7 +35,8 @@ class QuizController extends Controller
      */
     public function create()
     {
-        return view('quizzes.create');
+        $quizzes = Quizzes::all();
+        return view('quizzes.create', compact('quizzes'));
     }
 
    
@@ -58,41 +47,38 @@ class QuizController extends Controller
      */
     public function store(StoreQuizzRequest $request)
     {
-        $validated = $request->validated(); //récupère les donnés validées par le store
-        // gerer la sauvegarde de le quizz (s'il y en a)
-        if ($request->hasFile('image')) {
-            $path = $request
-            ->file('image')
-            ->store('images', 'public');
-            $validated['image'] = $path;
-        }
+        $validated = $request->validated();
 
-        $validated['user_id'] = 1;
-        // Envoyé le quizz dans la BDD
-        Quiz::create($validated);
+        quizzes::create([
+            'question' => $validated['question'],
+            'image' => $validated['image'],
+            'correct_answer' => $validated['correct_answer'],
+            'explanation' => $validated['explanation'],
+            
+        ]);
 
         // retourne sur la page des quizz 
         return redirect()->route('quizzes.index')
         ->with('success', 'Quizz créé avec succès !');
-        // dd($validated);
+        
     }
 
     /**
      * Display the specified resource.
      * Affiche une ressource spécifique
      */
-    // public function show($id)
-    // {
-    //     // $article = Article::where("id", $id)->with("comments")->first();
-    //     $article = Quiz::with('comments.user.articles')->find($id);
-    //   return view('articles.show', ['article' => $article]);
-    // }
+    public function show($id)
+    {
+        // $quizzes = Quizzes::where("id", $id)->first();
+        // // $article = Quizzes::with('comments.user.articles')->find($id);
+        // return view('quizzes.show', compact('quizzes'));
+    }
 
     /**
      * Show the form for editing the specified resource.
      * Affiche le formulaire d'édition
      */
-    public function edit(Quiz $quizzes)
+    public function edit(Quizzes $quizzes)
     {
         return view('quizzes.edit', ['quizzes' => $quizzes]);
     }
@@ -101,7 +87,7 @@ class QuizController extends Controller
      * Update the specified resource in storage.
      * Mettre à jour une ressource spécifique dans la base de donnée
      */
-    public function update(UpdateQuizzRequest $request, Quiz $quizzes)
+    public function update(UpdateQuizzRequest $request, Quizzes $quizzes)
     {
         // Les données validées sont déjà disponible
         // via le UpdateQuizzRequest
@@ -129,7 +115,7 @@ class QuizController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Quiz $quizzes)
+    public function destroy(Quizzes $quizzes)
     {
         if ($quizzes->image) {
             Storage::disk('public')->delete($quizzes->image);

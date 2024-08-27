@@ -35,14 +35,14 @@ Route::controller(PagesController::class)->group(function(){
 
 Route::controller(QuizController::class)->group(function(){
     Route::get('/quizzes', 'index')->name('quizzes.index');
-    Route::get('/quizzes/create', 'create')->name('quiizzes.create')->middleware('auth');
+    Route::get('/quizzes/create', 'create')->name('quizzes.create')->middleware('auth');
     Route::post('/quizzes', 'store')->name('quizzes.store')->middleware('auth');
-    Route::get('/quizzes/{quizze}', 'show')->name('quizzes.show');
+    Route::get('/quizzes/show', 'show')->name('quizzes.show');
     Route::get('/quizzes/{quizze}/edit', 'edit')->name('quizzes.edit')->middleware('auth');
     Route::patch('/quizzes/{quizze}', 'update')->name('quizzes.update')->middleware('auth');
     Route::delete('/quizzes/{quizze}', 'destroy')->name('quizzes.destroy')->middleware('auth');
 });
-/*Methode de routes recommadé*/
+
 
 
 /*Routes d'autentification */
@@ -58,3 +58,10 @@ Route::get('/profile', [UserController::class, 'index'])->name('profile')->middl
 // Route::get('/register', [LoginController::class, 'authenticate'])->name('authenticate');
 Route::delete('/user/delete', [UserController::class, 'destroy'])->middleware('auth')->name('user.destroy');
 Route::patch('/user/update', [UserController::class, 'update'])->middleware('auth')->name('user.update');
+
+// Les routes pour ajouter les quizzes accessible uniquement à l'admin
+Route::middleware(['auth', 'admin'])->group(function(){
+    Route::get('/admin/quizz/create', [QuizController::class, 'create'])->name('quiz.create')->middleware('admin');
+    Route::post('/admin/quizz/store', [QuizController::class, 'store'])->name('quiz.store')->middleware('admin');
+    // Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});

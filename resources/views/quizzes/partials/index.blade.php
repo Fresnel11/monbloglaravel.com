@@ -5,8 +5,5 @@
 @endsection
 
 @section('contenu')
-{{-- @foreach($quizzes as $quizze)
-<p>{{ $quizzes['title'] }}</p>
-<p>{{ $quizzes['body'] }}</p> --}}
-{{-- @endforeach --}}
+
 @endsection

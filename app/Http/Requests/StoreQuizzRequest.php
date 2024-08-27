@@ -22,9 +22,11 @@ class StoreQuizzRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => "required|string|max:255",
-            'body' => "required|string",
-            'image' => "nullable|image|mimes:jpeg,png,gif|max:2048",
+            'question' => "required|string|max:255",
+            'image' => 'nullable|image|mimes:jpeg,png,gif"',
+            'correct_answer' => "required|string",
+            'explanation' => "required|string|max:255",
+            // 'image' => "nullable|image|mimes:jpeg,png,gif|max:2048",
         ];
     }
 }

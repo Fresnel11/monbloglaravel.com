@@ -61,6 +61,7 @@
                                 <ul class="dropdown-menu">
                                     <a class="nav-link" href="{{ route('profile') }}">Votre profil</a>  
                                     <li>
+                                        
                                         <form action="{{ route('logout') }}" method="GET">
                                             <input class="btn btn-sm btn-dander ml-3" type="submit" value="Se déconnecter">
                                         </form>
@@ -70,10 +71,7 @@
                         @endauth
                     </ul>
                     @auth
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+                    <a href="{{ route('quizzes.create') }}" type="button" class="btn btn-primary">+ Creer un quizz</a>
                     @endauth
                     
                 </div>
