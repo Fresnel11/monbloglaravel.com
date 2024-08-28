@@ -52,11 +52,11 @@
        @if(true)
         @foreach($quizzes as $quizze)
       <tr>
-        <th scope="row">{{ $quizze->id }}</th>
-        <td>{{ $quizze->question }}</td>
-        <td>{{ $quizze->image }}</td>
-        <td>{{ $quizze->correct_answer }}</td>
-        <td>{{ $quizze->explanation }}</td>
+        <th scope="row">{{ $quizze['id'] }}</th>
+        <td>{{ $quizze['question'] }}</td>
+        <td>{{ $quizze['image'] }}</td>
+        <td>{{ $quizze['correct_answer'] }}</td>
+        <td>{{ $quizze['explanation'] }}</td>
         <td>
             <a href="{{ route('quizzes.edit', $quizze->id) }}" class="btn btn-warning btn-sm">Modifier</a>
             <form action="{{ route('quizzes.destroy', $quizze->id) }}" method="POST" style="display:inline;">

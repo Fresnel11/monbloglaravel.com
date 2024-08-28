@@ -11,6 +11,6 @@ class UserAnswer extends Model
     protected $fillable = ['user_id', 'quiz_id', 'user_answer'];
     public function quiz()
     {
-        return $this->belongsTo(Quiz::class);
+        return $this->belongsTo(Quizzes::class);
     }
 }

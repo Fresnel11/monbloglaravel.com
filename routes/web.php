@@ -41,6 +41,8 @@ Route::controller(QuizController::class)->group(function(){
     Route::get('/quizzes/{id}/edit', 'edit')->name('quizzes.edit')->middleware('auth');
     Route::patch('/quizzes/{id}', 'update')->name('quizzes.update')->middleware('auth');
     Route::delete('/quizzes/{id}', 'destroy')->name('quizzes.destroy')->middleware('auth');
+    Route::get('/store-incorrect-answer','saveIncorrectAnswer')->name('incorrectanswer.store')->middleware('auth');
+    Route::post('/quizzes/check/{id}','checkAnswer')->name('quizzes.check')->middleware('auth');
 });
 
 

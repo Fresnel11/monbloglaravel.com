@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Quizzes;
-
+use App\Models\IncorrectAnswer;
+use App\Models\UserAnswer;
 
 class QuizController extends Controller
 {
@@ -22,10 +23,10 @@ class QuizController extends Controller
             return view('auth.register');
         }
         // Sélectionne 10 Quizz a afficher de manière aléatoire 
-        $quizzes = Quizzes::all();
-        return view('quizzes.index', compact('quizzes'));
+        $quizzes = Quizzes::inRandomOrder()->limit(10)->get();
+        return view('quizzes.partials.index', compact('quizzes'));
         // return view('layouts.quizzes', ['quizzes' => $quizzes]);
-        
+
         // $articles = Quiz::latest()->paginate(5);
     }
 
@@ -37,10 +38,9 @@ class QuizController extends Controller
     {
         $quizzes = Quizzes::all();
         return view('quizzes.create', compact('quizzes'));
-
     }
 
-   
+
 
     /**
      * Store a newly created resource in storage.
@@ -61,17 +61,13 @@ class QuizController extends Controller
         $quiz->save();
 
         return redirect()->route('quizzes.create')->with('success', 'Quiz ajouté avec succès.');
-        
     }
 
     /**
      * Display the specified resource.
      * Affiche une ressource spécifique
      */
-    public function show($id)
-    {
-        
-    }
+    public function show($id) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -81,51 +77,52 @@ class QuizController extends Controller
     {
         // Trouver le quiz par ID
         $quizzes = Quizzes::findOrFail($id);
-    
+        
         // Retourner la vue d'édition avec les quizzes
-        return view('quizzes.create', compact('quizzes'));
+        // dd("hello");
+        return view('quizzes.edit', compact('quizzes'));
     }
-    
+
 
     /**
      * Update the specified resource in storage.
      * Mettre à jour une ressource spécifique dans la base de donnée
      */
     public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'question' => 'required|string|max:255',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        'correct_answer' => 'required|string|max:255',
-        'explanation' => 'nullable|string',
-    ]);
+    {
+        $validated = $request->validate([
+            'question' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'correct_answer' => 'required|string|max:255',
+            'explanation' => 'nullable|string',
+        ]);
 
-    // Trouver le quiz par ID
-    $quizzes = Quizzes::findOrFail($id);
+        // Trouver le quiz par ID
+        $quizzes = Quizzes::findOrFail($id);
 
-    // Mettre à jour les champs du quiz
-    $quizzes->question = $validated['question'];
-    $quizzes->correct_answer = $validated['correct_answer'];
-    $quizzes->explanation = $validated['explanation'];
+        // Mettre à jour les champs du quiz
+        $quizzes->question = $validated['question'];
+        $quizzes->correct_answer = $validated['correct_answer'];
+        $quizzes->explanation = $validated['explanation'];
 
-    // Gérer le fichier image si un nouveau fichier est téléchargé
-    if ($request->hasFile('image')) {
-        // Supprimer l'ancienne image si elle existe
-        if ($quizzes->image) {
-            Storage::delete('public/' . $quizzes->image);
+        // Gérer le fichier image si un nouveau fichier est téléchargé
+        if ($request->hasFile('image')) {
+            // Supprimer l'ancienne image si elle existe
+            if ($quizzes->image) {
+                Storage::delete('public/' . $quizzes->image);
+            }
+
+            // Stocker la nouvelle image
+            $imagePath = $request->file('image')->store('images', 'public');
+            $quizzes->image = $imagePath;
         }
 
-        // Stocker la nouvelle image
-        $imagePath = $request->file('image')->store('images', 'public');
-        $quizzes->image = $imagePath;
+        // Sauvegarder les changements dans la base de données
+        $quizzes->save();
+
+        // Rediriger avec un message de succès
+        return redirect()->route('quizzes.create')->with('success', 'Quiz mis à jour avec succès.');
     }
-
-    // Sauvegarder les changements dans la base de données
-    $quizzes->save();
-
-    // Rediriger avec un message de succès
-    return redirect()->route('quizzes.index')->with('success', 'Quiz mis à jour avec succès.');
-}
 
 
     /**
@@ -136,12 +133,57 @@ class QuizController extends Controller
         $quiz = Quizzes::findOrFail($id);
 
         if ($quiz->image) {
-            \Storage::delete('public/' . $quiz->image);
+            Storage::delete('public/' . $quiz->image);
         }
-        
+
         // Supprimer le quizz de la BDD
         $quiz->delete();
-        
+
         return redirect()->route('quizzes.create')->with('success', 'Quizz supprimé avec succès !');
+    }
+
+    public function incrementUserScore() 
+    {
+        $user = auth()->user();
+        $user->score += 5; //Incrémente le score de l'utilisateur à plus 5
+        $user->save(); // sauvegarde le score
+    }
+
+    // public function saveIncorrectAnswer($quizz)
+    // {
+    //     IncorrectAnswer::create([
+    //         'user_id' => auth()->id(),
+    //         'quiz_id' => $quizz->id,
+    //         'user_answer' => now(),
+    //     ]);
+    // }
+
+    public function checkAnswer(Request $request, $id)
+    {
+        $quiz = Quizzes::findOrFail($id);
+        // Récuperer la réponse du user depuis le formulaire
+        $userAnswer = $request->input('answer');
+
+        // stocker la réponse de l'utilisateur
+        UserAnswer::create([
+            'user_id' => auth()->id(),
+            'quiz_id' => $quiz->id,
+            'user_answer' => $userAnswer,
+        ]);
+
+        // Comparer la reponse de l'utilisateur avec la bonne réponse
+        $isCorrect = $quiz->correct_answer == $userAnswer;
+
+
+        // Logique pour la comparaison des résultats
+        if($isCorrect){
+            $this->incrementUserScore();
+            session()->flash('success', 'Bonne réponse !');
+        } else {
+            $correctAnswerText = $quiz->correct_answer ? 'Vrai' : 'Faux';
+            session()->flash('error', 'Mauvaise réponse !');
+            return redirect()->route('')->with('error', "Incorrect! la bonne réponse est $correctAnswerText. {$quiz->explanation}");
+        }
+        
     }
 }
