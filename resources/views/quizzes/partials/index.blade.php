@@ -19,34 +19,38 @@
             Aucun quiz disponible.
         </div>
     @else
-        <div class="row">
-            @foreach ($quizzes as $quiz)
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        @if ($quiz->image)
-                            <img src="{{ asset('storage/' . $quiz->image) }}" class="card-img-top" alt="Image du quiz">
-                        @endif
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $quiz->question }}</h5>
+    <div class="container mt-5">
+        {{-- <h1 class="mb-4">Question {{ $questionIndex + 1 }} sur 10</h1> --}}
 
-                            <form action="{{ route('quizzes.check', ['id' => $quiz->id]) }}" method="POST">
-                                @csrf
-                                <div class="d-flex justify-content-between">
-                                    <button type="submit" name="answer" value="true" class="btn btn-success">Vrai</button>
-                                    <button type="submit" name="answer" value="false" class="btn btn-danger">Faux</button>
-                                </div>
-                            </form>
+        @if ($quizzes->image)
+            <div class="text-center mb-4">
+                <img src="{{ asset('storage/' . $quizzes->image) }}" class="img-fluid" alt="quizzes Image">
+            </div>
+        @endif
 
-                            @if (session('result') && session('quiz_id') === $quiz->id)
-                                <div class="mt-3 alert {{ session('result') ? 'alert-success' : 'alert-danger' }}">
-                                    {{ session('result') ? 'Bonne réponse!' : 'Mauvaise réponse. ' . $quiz->explanation }}
-                                </div>
-                            @endif
-                        </div>
-                    </div>
+        <form action="{{ route('quizzes.storeAnswer') }}" method="POST">
+            @csrf
+            <fieldset class="form-group">
+                <legend>{{ $quizzes->question }}</legend>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="trueAnswer" value="true" required>
+                    <label class="form-check-label" for="trueAnswer">
+                        Vrai
+                    </label>
                 </div>
-            @endforeach
-        </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="falseAnswer" value="false" required>
+                    <label class="form-check-label" for="falseAnswer">
+                        Faux
+                    </label>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary">Suivant</button>
+        </form>
+    </div>
     @endif
 </div>
 @endsection

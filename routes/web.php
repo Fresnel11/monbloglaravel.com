@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\SessionsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -41,11 +42,11 @@ Route::controller(QuizController::class)->group(function(){
     Route::get('/quizzes/{id}/edit', 'edit')->name('quizzes.edit')->middleware('auth');
     Route::patch('/quizzes/{id}', 'update')->name('quizzes.update')->middleware('auth');
     Route::delete('/quizzes/{id}', 'destroy')->name('quizzes.destroy')->middleware('auth');
-    Route::get('/store-incorrect-answer','saveIncorrectAnswer')->name('incorrectanswer.store')->middleware('auth');
+    Route::get('/quizzes/answer','storeAnswer')->name('quizzes.storeAnswer')->middleware('auth');
     Route::post('/quizzes/check/{id}','checkAnswer')->name('quizzes.check')->middleware('auth');
 });
 
-
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 /*Routes d'autentification */
 Route::get('/register', [RegisterController::class, 'index'])->name('register')->middleware('guest');

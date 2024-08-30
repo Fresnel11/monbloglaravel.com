@@ -19,9 +19,9 @@ class QuizController extends Controller
      */
     public function index(Request $request)
     {
-        if (!Auth::user()) {
-            return view('auth.register');
-        }
+        // if (!Auth::user()) {
+        //     return view('auth.register');
+        // }
         // Sélectionne 10 Quizz a afficher de manière aléatoire 
         $quizzes = Quizzes::inRandomOrder()->limit(10)->get();
         return view('quizzes.partials.index', compact('quizzes'));
@@ -67,7 +67,18 @@ class QuizController extends Controller
      * Display the specified resource.
      * Affiche une ressource spécifique
      */
-    public function show($id) {}
+    public function show(Request $request) 
+    {
+        $questionCouranteIndex = $request->session()->get('questionIndex', 0);
+        $quizzes = Quizzes::skip($questionCouranteIndex)->first();
+        $quiz = $quizzes->get($questionCouranteIndex);
+
+        if(!$quiz) {
+            return redirect()->route('quizzes.dashbord');
+        }
+
+        return view('quizzes.partials.index', ['quiz' => $quiz, 'questionIndex' =>$questionCouranteIndex,]);
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -158,32 +169,84 @@ class QuizController extends Controller
     //     ]);
     // }
 
-    public function checkAnswer(Request $request, $id)
-    {
-        $quiz = Quizzes::findOrFail($id);
-        // Récuperer la réponse du user depuis le formulaire
-        $userAnswer = $request->input('answer');
+    // public function checkAnswer(Request $request, $id)
+    // {
+    //     $quiz = Quizzes::findOrFail($id);
+    //     // Récuperer la réponse du user depuis le formulaire
+    //     $userAnswer = $request->input('answer');
+    //     $questionCouranteIndex = $request->session()->get('current_question_index', 0);
+    //     $quizzes = Quizzes::all();
+    //     // stocker la réponse de l'utilisateur
+    //     UserAnswer::create([
+    //         'user_id' => auth()->id(),
+    //         'quiz_id' => $quiz->id,
+    //         'user_answer' => $userAnswer,
+    //     ]);
 
-        // stocker la réponse de l'utilisateur
-        UserAnswer::create([
-            'user_id' => auth()->id(),
-            'quiz_id' => $quiz->id,
-            'user_answer' => $userAnswer,
-        ]);
+    //     $nextQuestionIndex = $questionCouranteIndex + 1;
 
-        // Comparer la reponse de l'utilisateur avec la bonne réponse
-        $isCorrect = $quiz->correct_answer == $userAnswer;
+    //     if ($nextQuestionIndex >= 10){
+    //         return redirect()->route('quizzes.dashbord');
+    //     }
+
+    //     $request->session()->put('current_question_index', $nextQuestionIndex);
+    //     // Comparer la reponse de l'utilisateur avec la bonne réponse
+    //     $isCorrect = $quiz->correct_answer == $userAnswer;
 
 
-        // Logique pour la comparaison des résultats
-        if($isCorrect){
-            $this->incrementUserScore();
-            session()->flash('success', 'Bonne réponse !');
-        } else {
-            $correctAnswerText = $quiz->correct_answer ? 'Vrai' : 'Faux';
-            session()->flash('error', 'Mauvaise réponse !');
-            return redirect()->route('')->with('error', "Incorrect! la bonne réponse est $correctAnswerText. {$quiz->explanation}");
-        }
+    //     // Logique pour la comparaison des résultats
+    //     if($isCorrect){
+    //         $this->incrementUserScore();
+    //         session()->flash('success', 'Bonne réponse !');
+    //     } else {
+    //         $correctAnswerText = $quiz->correct_answer ? 'Vrai' : 'Faux';
+    //         session()->flash('error', 'Mauvaise réponse !');
+    //         return redirect()->route('')->with('error', "Incorrect! la bonne réponse est $correctAnswerText. {$quiz->explanation}");
+    //     }
         
+    // }
+
+    public function saveAnswer(Request $request)
+    {
+        $userId = Auth::id(); // Je m'assure que l'utilisateur est connecté
+        $answer = $request->input('answer');
+        $currentQuestionIndex = $request->session()->get('current_question_index', 0);
+        $quizzes = Quizzes::all();
+        $quiz = $quizzes->get($currentQuestionIndex);
+
+        if(!$quiz) {
+            return redirect()->route('dashbord');
+        }
+
+        $correctAnswer = $quiz->correct_answer;
+        $score = $request->session()->get('score', 0);
+
+        if($answer === $correctAnswer) {
+            $score++;
+        }
+
+        // Stocker la réponse de l'utilisateur
+        UserAnswer::updateOrCreate(
+            [
+                'user_id' => $userId,
+                'quiz_id' => $quiz->id,
+            ],
+            [
+                'user_answer' => $answer,
+            ]
+        );
+
+        $request->session()->put('score', $score);
+
+        $nextQuestionIndex = $currentQuestionIndex + 1;
+
+        if($nextQuestionIndex >= 10) {
+            // Rediriger vers le tableau de bord si 10 questions ont été répondues
+            return redirect()->route('quizzes.dashbord');
+        }
+
+        $request->session()->put('current_question_index', $nextQuestionIndex);
+
+        return redirect()->route('quizzes.show');
     }
 }
