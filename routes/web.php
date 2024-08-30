@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SessionsController;
@@ -36,8 +37,8 @@ Route::controller(PagesController::class)->group(function(){
 
 Route::controller(QuizController::class)->group(function(){
     Route::get('/quizzes', 'index')->name('quizzes.index');
-    Route::get('/quizzes/create', 'create')->name('quizzes.create')->middleware('auth');
-    Route::post('/quizzes', 'store')->name('quizzes.store')->middleware('auth');
+    // Route::get('/quizzes/create', 'create')->name('quizzes.create')->middleware('auth');
+    // Route::post('/quizzes', 'store')->name('quizzes.store')->middleware('auth');
     Route::get('/quizzes/show', 'show')->name('quizzes.show');
     Route::get('/quizzes/{id}/edit', 'edit')->name('quizzes.edit')->middleware('auth');
     Route::patch('/quizzes/{id}', 'update')->name('quizzes.update')->middleware('auth');
@@ -45,6 +46,10 @@ Route::controller(QuizController::class)->group(function(){
     Route::get('/quizzes/answer','storeAnswer')->name('quizzes.storeAnswer')->middleware('auth');
     Route::post('/quizzes/check/{id}','checkAnswer')->name('quizzes.check')->middleware('auth');
 });
+
+// Route::controller(AdminController::class)->group(function(){
+//     Route::get('/admin-Dashbord','index')->name('admin.dashbord');
+// });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -63,8 +68,9 @@ Route::delete('/user/delete', [UserController::class, 'destroy'])->middleware('a
 Route::patch('/user/update', [UserController::class, 'update'])->middleware('auth')->name('user.update');
 
 // Les routes pour ajouter les quizzes accessible uniquement à l'admin
-Route::middleware(['auth', 'admin'])->group(function(){
-    Route::get('/admin/quizz/create', [QuizController::class, 'create'])->name('quiz.create')->middleware('admin');
-    Route::post('/admin/quizz/store', [QuizController::class, 'store'])->name('quiz.store')->middleware('admin');
-    // Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::middleware(['middleware' => 'admin'])->group(function(){
+    Route::get('/admin-Dashbord', [AdminController::class, 'index'])->name('admin.dashbord');
+    Route::get('/quizzes/create', [QuizController::class, 'create'])->name('quizzes.create');
+    Route::post('/quizzes', [QuizController::class, 'store'])->name('quizzes.store');
+//     // Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });

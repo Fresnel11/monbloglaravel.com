@@ -153,12 +153,12 @@ class QuizController extends Controller
         return redirect()->route('quizzes.create')->with('success', 'Quizz supprimé avec succès !');
     }
 
-    public function incrementUserScore() 
-    {
-        $user = auth()->user();
-        $user->score += 5; //Incrémente le score de l'utilisateur à plus 5
-        $user->save(); // sauvegarde le score
-    }
+    // public function incrementUserScore() 
+    // {
+    //     $user = auth()->user();
+    //     $user->score += 5; //Incrémente le score de l'utilisateur à plus 5
+    //     $user->save(); // sauvegarde le score
+    // }
 
     // public function saveIncorrectAnswer($quizz)
     // {

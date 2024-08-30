@@ -22,8 +22,8 @@
                             {{-- <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
                                 style="max-width: 3rem" /> --}}
                             {{-- <button class="btn btn-outline-dark flex-shrink-0" type="button"> --}}
-                            <a href="{{ route('quizzes.index') }}" class="codepen-button btn btn-outline-dark  "><span>Start
-                                    Quizz</span></a>
+                            {{-- <a href="{{ route('quizzes.index') }}" class="codepen-button btn btn-outline-dark  "><span>Start
+                                    Quizz</span></a> --}}
                             {{-- </button> --}}
                         </div>
                     </div>

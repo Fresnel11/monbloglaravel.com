@@ -26,10 +26,10 @@
                             <div class="row gy-3 overflow-hidden">
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control @error('nom') is-invalid @enderror"
-                                            name="nom" id="nom" placeholder="Nom" required>
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                            name="name" id="name" placeholder="Nom"  required>
                                         <label for="email" class="form-label">Nom</label>
-                                        @error('nom')
+                                        @error('name')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -63,13 +63,13 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="confirm_password"
-                                            class="form-control @error('confirm_password') is-invalid @enderror"
-                                            name="confirm_password" id="confirm_password" value=""
+                                        <input type="password"
+                                            class="form-control @error('password_confirmation') is-invalid @enderror"
+                                            name="password_confirmation" id="password_confirmation" 
                                             placeholder="Confirmer le mot de passe" required>
-                                        <label for="confirm_password" class="form-label">Confirmer le mot de
+                                        <label for="password_confirmation" class="form-label">Confirmer le mot de
                                             passe</label>
-                                        @error('confirm_password')
+                                        @error('password_confirmation')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>

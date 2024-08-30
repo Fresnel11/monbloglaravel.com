@@ -7,10 +7,15 @@
     {{-- Ajout de boostrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
     <title>
         @yield('title', 'Mon Blog Laravel')
     </title>
+    <link rel="icon"
+        href="https://cdn-icons-png.freepik.com/256/5726/5726690.png?ga=GA1.1.386584594.1721053128&semt=ais_hybrid"
+        type="image/png">
     <style>
         /* From Uiverse.io by satyamchaudharydev */
         /* === removing default button style ===*/
@@ -59,7 +64,7 @@
             filter: drop-shadow(0 0 23px var(--animation-color))
         }
 
-        .actual-text{
+        .actual-text {
             color: black;
         }
 
@@ -81,10 +86,10 @@
         <nav class="navbar navbar-expand-lg navbar-light ">
             <div class="container px-4 px-lg-5">
                 {{-- <a class="navbar-brand" href="/"> --}}
-                    <button class="button navbar-brand " data-text="Awesome">
-                        <span class="actual-text">&nbsp;CODE QUIZZ&nbsp;</span>
-                        <span aria-hidden="true" class="hover-text">&nbsp;CODE QUIZZ&nbsp;</span>
-                    </button>
+                <button class="button navbar-brand " data-text="Awesome">
+                    <span class="actual-text">&nbsp;CODE QUIZZ&nbsp;</span>
+                    <span aria-hidden="true" class="hover-text">&nbsp;CODE QUIZZ&nbsp;</span>
+                </button>
                 {{-- </a> --}}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -121,6 +126,11 @@
                                         <input class="btn btn-sm btn-dander ml-3" type="submit" value="Se déconnecter">
                                     </form>
                                 </li>
+                                @if (Auth::check() && Auth::user()->is_admin)
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.dashbord') }}">Dashboard Admin</a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endauth

@@ -14,24 +14,24 @@
         </div>
     @endif
 
-    @if ($quizzes->isEmpty())
+    {{-- @if ($quiz->isEmpty())
         <div class="alert alert-info">
             Aucun quiz disponible.
         </div>
-    @else
+    @else --}}
     <div class="container mt-5">
         {{-- <h1 class="mb-4">Question {{ $questionIndex + 1 }} sur 10</h1> --}}
-
-        @if ($quizzes->image)
+        @foreach ($quizzes as $quiz)
+        @if ($quiz->image)
             <div class="text-center mb-4">
-                <img src="{{ asset('storage/' . $quizzes->image) }}" class="img-fluid" alt="quizzes Image">
+                <img src="{{ asset('storage/' . $quiz->image) }}" class="img-fluid" alt="quizzes Image">
             </div>
         @endif
 
-        <form action="{{ route('quizzes.storeAnswer') }}" method="POST">
+        <form action="{{ route('quizzes.storeAnswer') }}" method="GET">
             @csrf
             <fieldset class="form-group">
-                <legend>{{ $quizzes->question }}</legend>
+                <legend>{{ $quiz->question }}</legend>
 
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="answer" id="trueAnswer" value="true" required>
@@ -47,11 +47,13 @@
                     </label>
                 </div>
             </fieldset>
+            @endforeach
 
             <button type="submit" class="btn btn-primary">Suivant</button>
         </form>
     </div>
-    @endif
+    
+    
 </div>
 @endsection
 
