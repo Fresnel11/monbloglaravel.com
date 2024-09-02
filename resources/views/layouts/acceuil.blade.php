@@ -4,9 +4,9 @@
         <section class="py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="row gx-4 gx-lg-5 align-items-center">
-                    <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0 "
-                            src="https://img.freepik.com/free-vector/programming-concept-illustration_114360-1351.jpg?t=st=1725002665~exp=1725006265~hmac=3cb60dd0f1a6a9802607919372b2c1b09da5aa4c16ab25d0bff55f4862db5339&w=740"
-                            alt="" /></div>
+                    <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0 ">
+                           <img class="img-fluid " src="https://img.freepik.com/vecteurs-libre/illustration-du-concept-codage_114360-939.jpg?t=st=1725298431~exp=1725302031~hmac=34427bf5379e9b5e5664228be7e4b02b72057a6f8e4c682a3872cbb3fdd5ed68&w=740" alt="">
+                    </div>
                     <div class="col-md-6">
                         {{-- <div class="small mb-1">SKU: BST-498</div> --}}
                         <h1 class="display-5 fw-bolder">CODE QUIZZ</h1>
@@ -19,12 +19,11 @@
                             Rejoignez-nous pour des défis amusants, améliorez vos connaissances et devenez un expert du code
                             !</p>
                         <div class="d-flex">
-                            {{-- <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
-                                style="max-width: 3rem" /> --}}
-                            {{-- <button class="btn btn-outline-dark flex-shrink-0" type="button"> --}}
-                            {{-- <a href="{{ route('quizzes.index') }}" class="codepen-button btn btn-outline-dark  "><span>Start
-                                    Quizz</span></a> --}}
-                            {{-- </button> --}}
+                            <a href="{{ route('quizzes.index') }}" class="ui-btn">
+                                <span>
+                                   Jouer
+                                </span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -32,59 +31,168 @@
         </section>
     </section>
     <style>
-        /
+        /* From Uiverse.io by Galahhad */
+        .ui-btn {
+            --btn-default-bg: rgb(41, 41, 41);
+            --btn-padding: 15px 20px;
+            --btn-hover-bg: rgb(51, 51, 51);
+            --btn-transition: .3s;
+            --btn-letter-spacing: .1rem;
+            --btn-animation-duration: 1.2s;
+            --btn-shadow-color: rgba(0, 0, 0, 0.137);
+            --btn-shadow: 0 2px 10px 0 var(--btn-shadow-color);
+            --hover-btn-color: #FAC921;
+            --default-btn-color: #fff;
+            --font-size: 16px;
+            /* 👆 this field should not be empty */
+            --font-weight: 600;
+            --font-family: Menlo, Roboto Mono, monospace;
+            /* 👆 this field should not be empty */
+        }
 
+        /* button settings 👆 */
 
-        .codepen-button {
-            display: block;
+        .ui-btn {
+            box-sizing: border-box;
+            padding: var(--btn-padding);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--default-btn-color);
+            font: var(--font-weight) var(--font-size) var(--font-family);
+            background: var(--btn-default-bg);
+            border: none;
             cursor: pointer;
-            color: white;
-            margin: 0 auto;
-            position: relative;
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: 6px;
+            transition: var(--btn-transition);
             overflow: hidden;
-            padding: 3px;
-            isolation: isolate;
-            transform: translateX(-145%)
+            box-shadow: var(--btn-shadow);
         }
 
-        .codepen-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 400%;
-            height: 100%;
-            background: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
-            background-size: 25% 100%;
-            animation: an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop .75s linear infinite;
-            animation-play-state: paused;
-            translate: -5% 0%;
-            transition: translate 0.25s ease-out;
-        }
-
-        .codepen-button:hover::before {
-            animation-play-state: running;
-            transition-duration: 0.75s;
-            translate: 0% 0%;
-        }
-
-        @keyframes an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop {
-            to {
-                transform: translateX(-25%);
-            }
-        }
-
-        .codepen-button span {
+        .ui-btn span {
+            letter-spacing: var(--btn-letter-spacing);
+            transition: var(--btn-transition);
+            box-sizing: border-box;
             position: relative;
-            display: block;
-            padding: 1rem 1.5rem;
-            font-size: 1.1rem;
-            background: #000;
-            border-radius: 3px;
-            height: 100%;
+            background: inherit;
+        }
+
+        .ui-btn span::before {
+            box-sizing: border-box;
+            position: absolute;
+            content: "";
+            background: inherit;
+        }
+
+        .ui-btn:hover,
+        .ui-btn:focus {
+            background: var(--btn-hover-bg);
+        }
+
+        .ui-btn:hover span,
+        .ui-btn:focus span {
+            color: var(--hover-btn-color);
+        }
+
+        .ui-btn:hover span::before,
+        .ui-btn:focus span::before {
+            animation: chitchat linear both var(--btn-animation-duration);
+        }
+
+       
+
+        @keyframes chitchat {
+            0% {
+                content: "#";
+            }
+
+            5% {
+                content: ".";
+            }
+
+            10% {
+                content: "^{";
+            }
+
+            15% {
+                content: "-!";
+            }
+
+            20% {
+                content: "#$_";
+            }
+
+            25% {
+                content: "№:0";
+            }
+
+            30% {
+                content: "#{+.";
+            }
+
+            35% {
+                content: "@}-?";
+            }
+
+            40% {
+                content: "?{4@%";
+            }
+
+            45% {
+                content: "=.,^!";
+            }
+
+            50% {
+                content: "?2@%";
+            }
+
+            55% {
+                content: "\;1}]";
+            }
+
+            60% {
+                content: "?{%:%";
+                right: 0;
+            }
+
+            65% {
+                content: "|{f[4";
+                right: 0;
+            }
+
+            70% {
+                content: "{4%0%";
+                right: 0;
+            }
+
+            75% {
+                content: "'1_0<";
+                right: 0;
+            }
+
+            80% {
+                content: "{0%";
+                right: 0;
+            }
+
+            85% {
+                content: "]>'";
+                right: 0;
+            }
+
+            90% {
+                content: "4";
+                right: 0;
+            }
+
+            95% {
+                content: "2";
+                right: 0;
+            }
+
+            100% {
+                content: "";
+                right: 0;
+            }
         }
     </style>
 @endsection

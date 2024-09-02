@@ -1,261 +1,175 @@
 @extends('layouts.master')
 
 @section('contenu')
-    <div class="container">
-        <div class="heading">Modifié votre profil</div>
-
-        @if (session('status'))
-            <p>{{ session('status') }}</p>
-        @endif
-        <form method="POST" action="{{ route('user.update') }}" class="form">
-            @csrf
-            @method('PATCH')
-            <input required="" class="input" type="text" name="name" id="name" value="{{ old('name') }}"
-                required placeholder="Nom">
-            @error('name')
-                <p>{{ $message }}</p>
-            @enderror
-            <input required="" class="input" type="email" name="email" id="email" value="{{ old('email') }}"
-                required placeholder="E-mail">
-            @error('email')
-                <p>{{ $message }}</p>
-            @enderror
-            <input required="" class="input" type="password" name="password" id="password" placeholder="Password">
-            @error('password')
-                <p>{{ $message }}</p>
-            @enderror
-            <input required="" class="input" type="password" name="password_confirmation" id="password_confirmation"
-                placeholder="Password">
-            <input class="login-button" type="submit" value="Modifié le profil">
-
-        </form>
-        <div class="social-account-container">
-            <div class="heading">Supprimé votre compte</div>
-            <form method="POST" action="{{ route('user.destroy') }}">
-                @csrf
-                @method('DELETE')
-                <input required="" class="input" type="password" name="password" id="password"
-                    placeholder="Confirmez votre mot de passe pour la suppression">
-                @error('password')
-                    <p>{{ $message }}</p>
-                @enderror
-                <input class="login-button" type="submit" value="Supprimé le compte">
-            </form>
+    <div class="container ">
+        <div class="d-flex justify-content-center">
+            <div class="card" style="max-width: 1000px; width: 300%;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Mon Profil</h5>
+                    <p class="card-text"><strong>ID :</strong> {{ Auth::user()->id }}</p>
+                    <p class="card-text"><strong>Nom :</strong> {{ Auth::user()->name }}</p>
+                    <p class="card-text"><strong>Email :</strong> {{ Auth::user()->email }}</p>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button id="upButon" class="btn btn-primary me-2">Modifier le profil</button>
+                        <form action="" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">Supprimer le compte</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <span class="agreement"><a href="#">Learn user licence agreement</a></span>
+    </div>
+    <div id="update">
+
+        <section class=" p-3 p-md-4 p-xl-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-9 col-lg-7 col-xl-6 col-xxl-5">
+                        <div class="card border border-light-subtle rounded-4">
+                            <div class="card-body p-3 p-md-4 p-xl-5">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="mb-5">
+                                            <div class="text-center mb-4">
+
+                                                <h2>Modifier votre profil</h2>
+
+                                            </div>
+                                            {{-- <h4 class="text-center">Bienvenue sur code quizz !</h4> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <form method="POST" action="{{ route('user.update') }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <div class="row gy-3 overflow-hidden">
+                                        <div class="col-12">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" value="{{ old('name') }}"
+                                                    class="form-control @error('name') is-invalid @enderror" name="name"
+                                                    id="name" placeholder="Nouveau nom" required>
+                                                <label for="email" class="form-label">Nouveau nom</label>
+                                                @error('name')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-floating mb-3">
+                                                <input type="email"
+                                                    class="form-control @error('email') is-invalid @enderror" name="email"
+                                                    id="email" placeholder="Nouvelle adresse-mail" required>
+                                                <label for="email" class="form-label">Nouvelle adresse-mail</label>
+                                                @error('email')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-floating mb-3">
+                                                <input type="password"
+                                                    class="form-control @error('password') is-invalid @enderror"
+                                                    name="password" id="password" placeholder="Nouveau mot de passe"
+                                                    required>
+                                                <label for="password" class="form-label">Nouveau mot de passe</label>
+                                                @error('password')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-floating mb-3">
+                                                <input type="password"
+                                                    class="form-control @error('password_confirmation') is-invalid @enderror"
+                                                    name="password_confirmation" id="password_confirmation"
+                                                    placeholder="Confirmer le nouveau mot de passe" required>
+                                                <label for="password_confirmation" class="form-label">Confirmer le nouveau
+                                                    mot de
+                                                    passe</label>
+                                                @error('password_confirmation')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-grid">
+                                                <button id="creer" class="btn bsb-btn-xl btn-primary"
+                                                    type="submit">Modifier le profile</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    #creer {
+                        background-color: #018673;
+                        border: none;
+                    }
+                </style>
+        </section>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Etes vous sûr de vouloir supprimé le compte ?
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('user.destroy') }}">
+                        @csrf
+                        @method('DELETE')
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Mot de passe</label>
+                            <input required="" type="password" class="form-control"
+                                placeholder="Confirmez votre mot de passe pour la suppression" id="recipient-name">
+                        </div>
+                        @error('password')
+                            <p>{{ $message }}</p>
+                        @enderror
+                        {{-- <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Message:</label>
+                  <textarea class="form-control" id="message-text"></textarea>
+                </div> --}}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger">Supprimer le compte</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <style>
-        .container {
-            max-width: 350px;
-            background: #F8F9FD;
-            background: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(244, 247, 251) 100%);
-            border-radius: 40px;
-            padding: 25px 35px;
-            border: 5px solid rgb(255, 255, 255);
-            box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 30px 30px -20px;
-            margin: 20px;
-        }
-
-        .heading {
-            text-align: center;
-            font-weight: 900;
-            font-size: 30px;
-            color: rgb(16, 137, 211);
-        }
-
-        .form {
-            margin-top: 20px;
-        }
-
-        input{
-            width: 100%;
-            background: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 20px;
-            margin-top: 15px;
-            box-shadow: #cff0ff 0px 10px 10px -5px;
-            border-inline: 2px solid transparent; 
-        }
-
-        .form .input {
-            width: 100%;
-            background: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 20px;
-            margin-top: 15px;
-            box-shadow: #cff0ff 0px 10px 10px -5px;
-            border-inline: 2px solid transparent;
-        }
-
-        .form .input::-moz-placeholder {
-            color: rgb(170, 170, 170);
-        }
-
-        .form .input::placeholder {
-            color: rgb(170, 170, 170);
-        }
-
-        .form .input:focus {
-            outline: none;
-            border-inline: 2px solid #12B1D1;
-        }
-
-        .form .forgot-password {
-            display: block;
-            margin-top: 10px;
-            margin-left: 10px;
-        }
-
-        .form .forgot-password a {
-            font-size: 11px;
-            color: #0099ff;
-            text-decoration: none;
-        }
-
-        .form .login-button {
-            display: block;
-            width: 100%;
-            font-weight: bold;
-            background: linear-gradient(45deg, rgb(16, 137, 211) 0%, rgb(18, 177, 209) 100%);
-            color: white;
-            padding-block: 15px;
-            margin: 20px auto;
-            border-radius: 20px;
-            box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
-            border: none;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .login-button{
-            display: block;
-            width: 100%;
-            font-weight: bold;
-            background: linear-gradient(45deg, rgb(16, 137, 211) 0%, rgb(18, 177, 209) 100%);
-            color: white;
-            padding-block: 15px;
-            margin: 20px auto;
-            border-radius: 20px;
-            box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
-            border: none;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .form .login-button:hover {
-            transform: scale(1.03);
-            box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
-        }
-
-        .form .login-button:active {
-            transform: scale(0.95);
-            box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
-        }
-
-        .social-account-container {
-            margin-top: 25px;
-        }
-
-        .social-account-container .title {
-            display: block;
-            text-align: center;
-            font-size: 10px;
-            color: rgb(170, 170, 170);
-        }
-
-        .social-account-container .social-accounts {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 5px;
-        }
-
-        .social-account-container .social-accounts .social-button {
-            background: linear-gradient(45deg, rgb(0, 0, 0) 0%, rgb(112, 112, 112) 100%);
-            border: 5px solid white;
-            padding: 5px;
-            border-radius: 50%;
-            width: 40px;
-            aspect-ratio: 1;
-            display: grid;
-            place-content: center;
-            box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 10px -8px;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .social-account-container .social-accounts .social-button .svg {
-            fill: white;
-            margin: auto;
-        }
-
-        .social-account-container .social-accounts .social-button:hover {
-            transform: scale(1.2);
-        }
-
-        .social-account-container .social-accounts .social-button:active {
-            transform: scale(0.9);
-        }
-
-        .agreement {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .agreement a {
-            text-decoration: none;
-            color: #0099ff;
-            font-size: 9px;
-        }
-    </style>
+    <script>
+        let formUpdate = document.getElementById('update');
+        formUpdate.style.display = 'none';
+        document.getElementById('upButon').addEventListener('click', function() {
+            if (formUpdate.style.display === 'none') {
+                formUpdate.style.display = 'block'
+            } else {
+                formUpdate.style.display = 'none'
+            }
+        })
+    </script>
 @endsection
 
 
-{{-- <h1>Edit Profile</h1>
 
-    @if (session('status'))
-        <p>{{ session('status') }}</p>
-    @endif
 
-    <form method="POST" action="{{ route('user.update') }}">
-        @csrf
-        @method('PATCH')
-
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="{{ old('name') }}" required>
-        @error('name')
-            <p>{{ $message }}</p>
-        @enderror
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{ old('email') }}" required>
-        @error('email')
-            <p>{{ $message }}</p>
-        @enderror
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-        @error('password')
-            <p>{{ $message }}</p>
-        @enderror
-
-        <label for="password_confirmation">Confirm Password:</label>
-        <input type="password" id="password_confirmation" name="password_confirmation">
-        
-        <button type="submit">Update Profile</button>
-    </form>
-
-    <form method="POST" action="{{ route('user.destroy') }}">
-        @csrf
-        @method('DELETE')
-
-        <label for="password">Confirm Password for Deletion:</label>
-        <input type="password" id="password" name="password" required>
-        @error('password')
-            <p>{{ $message }}</p>
-        @enderror
-
-        <button type="submit">Delete Account</button>
-    </form> --}}

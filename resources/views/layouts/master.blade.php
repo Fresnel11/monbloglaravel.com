@@ -17,6 +17,7 @@
         href="https://cdn-icons-png.freepik.com/256/5726/5726690.png?ga=GA1.1.386584594.1721053128&semt=ais_hybrid"
         type="image/png">
     <style>
+       
         /* From Uiverse.io by satyamchaudharydev */
         /* === removing default button style ===*/
         .button {
@@ -68,6 +69,10 @@
             color: black;
         }
 
+        a {
+            text-decoration: none;
+        }
+
         /* a:hover {
             text-decoration: underline;
             
@@ -114,24 +119,26 @@
                         </form>
                     @endguest
                     @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">{{ Auth::user()->name }}</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li class="nav-item"><a class="dropdown-item nav-link" href="{{ route('profile') }}"> Votre
-                                        profil</a></li>
-                                <li>Dashboard</li>
-                                <li>
-                                    <form action="{{ route('logout') }}" method="GET">
-                                        <input class="btn btn-sm btn-dander ml-3" type="submit" value="Se déconnecter">
-                                    </form>
-                                </li>
-                                @if (Auth::check() && Auth::user()->is_admin)
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('admin.dashbord') }}">Dashboard Admin</a>
-                                    </li>
-                                @endif
-                            </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    {{ Auth::user()->name }}
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item" href="{{ route('profile') }}">Votre profil</a></li>
+                                    <li><a class="dropdown-item outline-danger" href="{{ route('logout') }}">Se
+                                            déconnecter</a></li>
+                                    @if (Auth::check() && Auth::user()->is_admin)
+                                        <li><a class="dropdown-item" href="{{ route('admin.dashbord') }}">Dashboard
+                                                Admin</a></li>
+                                    @endif
+                                </ul>
+                            </li>
+                        </ul>
+
+
+                        </ul>
                         </li>
                     @endauth
                 </div>
