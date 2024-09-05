@@ -2,8 +2,8 @@
 
 @section('contenu')
     <div class="container ">
-        <div class="d-flex justify-content-center">
-            <div class="card" style="max-width: 1000px; width: 300%;">
+        <div class="d-flex justify-content-center ">
+            <div class="card " style="max-width: 1000px; width: 300%;">
                 <div class="card-body">
                     <h5 class="card-title text-center">Mon Profil</h5>
                     <p class="card-text"><strong>ID :</strong> {{ Auth::user()->id }}</p>
@@ -42,7 +42,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <form method="POST" action="{{ route('user.update') }}">
+                                <form  method="POST" action="{{ route('user.update') }}">
                                     @csrf
                                     @method('PATCH')
                                     <div class="row gy-3 overflow-hidden">

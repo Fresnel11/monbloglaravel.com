@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
     <title>
@@ -18,8 +19,14 @@
         type="image/png">
     <style>
        
-        /* From Uiverse.io by satyamchaudharydev */
-        /* === removing default button style ===*/
+      body {
+        background-image: url("https://img.freepik.com/free-vector/cyber-technology-background_23-2148390330.jpg?t=st=1725346402~exp=1725350002~hmac=10a04412f5571aac0568846dc853415d9b0ecc901f518ff40500bf606fd7c59f&w=1380");
+        background-size: cover;
+        background-repeat: no-repeat;
+        
+      }
+
+     
         .button {
             margin: 0;
             height: auto;
@@ -102,11 +109,11 @@
                         class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Acceuil</a>
+                        <li class="nav-item"><a class="nav-link active text-secondary" aria-current="page" href="/">Acceuil</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('quizzes.index') }}">QUIZZES</a></li>
+                        <li class="nav-item"><a class="nav-link text-secondary" href="{{ route('quizzes.index') }}">QUIZZES</a></li>
                         @guest
-                            <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Créer un compte</a></li>
+                            <li class="nav-item"><a class="nav-link text-secondary" href="{{ route('register') }}">Créer un compte</a></li>
 
                         @endguest
 
@@ -222,6 +229,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 </body>
 

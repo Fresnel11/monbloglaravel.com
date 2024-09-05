@@ -43,7 +43,7 @@
                                         <div class="col-12">
                                             <div class="form-floating mb-3">
                                                 <input type="file" class="form-control" name="image" id="image"
-                                                    value="" required>
+                                                    value="">
                                                 <label for="image" class="form-label">Image</label>
                                             </div>
                                         </div>

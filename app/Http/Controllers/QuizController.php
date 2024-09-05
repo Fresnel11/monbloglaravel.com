@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Quizzes;
 use App\Models\IncorrectAnswer;
 use App\Models\UserAnswer;
+use Illuminate\Support\Facades\Session;
 
 class QuizController extends Controller
 {
@@ -19,10 +20,35 @@ class QuizController extends Controller
      */
     public function index() 
     { 
-        $quizzes = Quizzes::inRandomOrder()->take(10)->get(); // Récupérer 10 quiz aléatoires 
+        $quizzes = Quizzes::inRandomOrder()->limit(5)->get();  
         return view('quizzes.partials.index', compact('quizzes')); 
     }
 
+    public function submit(Request $request)
+    {
+        $score = 0;
+        $data = $request->all();
+
+        // Parcourir chaque question
+        foreach ($data as $key => $value) {
+            if (strpos($key, 'question_') === 0) {
+                $questionId = str_replace('question_', '', $key);
+                $question = Quizzes::find($questionId);
+
+                // Vérifier si la réponse est correcte
+                if ($question) {
+                    $correctAnswer = $question->answer->where('correct_answer', true)->first();
+                    if (($value == 'true' && $correctAnswer->is_true) || ($value == 'false' && !$correctAnswer->is_true)) {
+                        $score++;
+                    }
+                }
+            }
+        }
+
+        // Rediriger avec le score
+        return redirect()->route('quizzes.dashboard')->with('success', 'Quiz soumis avec succès ! Votre score est : ' . $score);
+    }
+  
     /**
      * Show the form for creating a new resource.
      * Afficher le formulaire de création d'un quizz
@@ -33,7 +59,25 @@ class QuizController extends Controller
         return view('quizzes.create', compact('quizzes'));
     }
 
+    public function answer(Request $request)
+    {
+        $correct = $request->input('correct');
+        $score = Session::get('score', 0);
 
+        if ($correct) {
+            $score++;
+        }
+
+        Session::put('score', $score);
+
+        $nextQuiz = Quizzes::find($request->input('next_quiz_id'));
+
+        if ($nextQuiz) {
+            return response()->json(['quiz' => $nextQuiz]);
+        } else {
+            return response()->json(['redirect' => route('quizzes.dashboard')]);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.

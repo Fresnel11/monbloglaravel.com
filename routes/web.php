@@ -5,6 +5,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SessionsController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
@@ -47,7 +48,9 @@ Route::controller(QuizController::class)->group(function(){
     Route::get('/quizzes/answer','storeAnswer')->name('quizzes.storeAnswer')->middleware('auth');
     Route::post('/quizzes/check/{id}','checkAnswer')->name('quizzes.check')->middleware('auth');
 });
+// Route::post('/quizzes/answer', [QuizzesController::class, 'answer'])->name('quizzes.answer');
 
+Route::get('/dashboard', [ScoreController::class, 'index'])->name('dashboard');
 // Route::controller(AdminController::class)->group(function(){
 //     Route::get('/admin-Dashbord','index')->name('admin.dashbord');
 // });
@@ -57,7 +60,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 /*Routes d'autentification */
 Route::get('/register', [RegisterController::class, 'index'])->name('register')->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store'])->middleware('guest')->middleware('guest');
-
+Route::post('/quiz', [QuizController::class, 'submit'])->name('quiz.submit');
 Route::get('/login', [SessionsController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [SessionsController::class, 'authenticate'])->middleware('guest');
 Route::get('/logout', [SessionsController::class, 'logout'])->name('logout')->middleware('auth');
