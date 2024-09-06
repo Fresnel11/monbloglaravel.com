@@ -47,15 +47,16 @@ Route::controller(QuizController::class)->group(function(){
     Route::delete('/quizzes/{id}', 'destroy')->name('quizzes.destroy')->middleware('auth');
     Route::get('/quizzes/answer','storeAnswer')->name('quizzes.storeAnswer')->middleware('auth');
     Route::post('/quizzes/check/{id}','checkAnswer')->name('quizzes.check')->middleware('auth');
+    // Route::get('quizzes/dashboard', 'submit')->name('quizzes.dashboard')->middleware('auth');
 });
 // Route::post('/quizzes/answer', [QuizzesController::class, 'answer'])->name('quizzes.answer');
 
-Route::get('/dashboard', [ScoreController::class, 'index'])->name('dashboard');
+// Route::get('/dashboard', [ScoreController::class, 'index'])->name('dashboard');
 // Route::controller(AdminController::class)->group(function(){
 //     Route::get('/admin-Dashbord','index')->name('admin.dashbord');
 // });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('quizzes.dashboard');
 
 /*Routes d'autentification */
 Route::get('/register', [RegisterController::class, 'index'])->name('register')->middleware('guest');

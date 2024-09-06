@@ -44,4 +44,8 @@ class User extends Authenticatable
 
     // Un utilisateurs peut écrire plusieurs articles
     
+    public function userAnswers()
+    {
+        return $this->hasMany(UserAnswer::class);
+    }
 }

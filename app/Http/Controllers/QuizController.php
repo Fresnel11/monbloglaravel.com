@@ -20,13 +20,14 @@ class QuizController extends Controller
      */
     public function index() 
     { 
-        $quizzes = Quizzes::inRandomOrder()->limit(5)->get();  
+        $quizzes = Quizzes::inRandomOrder()->limit(10)->get();  
         return view('quizzes.partials.index', compact('quizzes')); 
     }
 
     public function submit(Request $request)
     {
         $score = 0;
+        $user = auth()->user(); //Récuperer l'utilisateur connecté
         $data = $request->all();
 
         // Parcourir chaque question
@@ -35,18 +36,23 @@ class QuizController extends Controller
                 $questionId = str_replace('question_', '', $key);
                 $question = Quizzes::find($questionId);
 
+                if($question) {
+                    UserAnswer::create([
+                        'user_id' => $user -> id,
+                        'quiz_id' => $question ->id,
+                        'user_answer' => $value === 'true' ? 1 : 0, //Si vrai ou Faux
+                    ]);
+                }
+
                 // Vérifier si la réponse est correcte
-                if ($question) {
-                    $correctAnswer = $question->answer->where('correct_answer', true)->first();
-                    if (($value == 'true' && $correctAnswer->is_true) || ($value == 'false' && !$correctAnswer->is_true)) {
-                        $score++;
-                    }
+                if (($value === 'true' && $question->correct_answer) || ($value === 'false' && !$question->correct_answer)){
+                    $score ++;
                 }
             }
         }
 
         // Rediriger avec le score
-        return redirect()->route('quizzes.dashboard')->with('success', 'Quiz soumis avec succès ! Votre score est : ' . $score);
+        return redirect()->route('quizzes.dashboard')->with('score', $score);
     }
   
     /**
