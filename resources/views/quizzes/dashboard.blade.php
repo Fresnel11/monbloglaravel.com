@@ -19,5 +19,36 @@
     </div>
 @endif
 
+<canvas id="userProgressChart" width="400" height="200"></canvas>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let ctx = document.getElementById('userProgressChart').getContext('2d');
+    let quizResults = @json($quizResults); // Passer les résultats de PHP à Javascript
+
+    let labels = quizResults.map(result => new Date(result.played_at).toLocaleDateString()); // Corrected date formatting
+    let scores = quizResults.map(result => result.score);
+
+    const chart = new Chart(ctx, {
+        type: 'bar', // Type de graphique
+        data: {
+            labels: labels, // Date des sessions des quizz
+            datasets: [{
+                label: 'Score au quiz',
+                data: scores, // Score des sessions
+                borderColor: 'RGB(10 128 246)',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 10
+                }
+            }
+        }
+    });
+</script>
 @endsection

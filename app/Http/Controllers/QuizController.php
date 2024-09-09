@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Quizzes;
 use App\Models\IncorrectAnswer;
 use App\Models\UserAnswer;
+use App\Models\UserQuizResult;
 use Illuminate\Support\Facades\Session;
 
 class QuizController extends Controller
@@ -18,10 +19,10 @@ class QuizController extends Controller
      * Display a listing of the resource.
      * Affiches toutes les ressources (articles)
      */
-    public function index() 
-    { 
-        $quizzes = Quizzes::inRandomOrder()->limit(10)->get();  
-        return view('quizzes.partials.index', compact('quizzes')); 
+    public function index()
+    {
+        $quizzes = Quizzes::inRandomOrder()->limit(10)->get();
+        return view('quizzes.partials.index', compact('quizzes'));
     }
 
     public function submit(Request $request)
@@ -36,25 +37,51 @@ class QuizController extends Controller
                 $questionId = str_replace('question_', '', $key);
                 $question = Quizzes::find($questionId);
 
-                if($question) {
+                if ($question) {
                     UserAnswer::create([
-                        'user_id' => $user -> id,
-                        'quiz_id' => $question ->id,
+                        'user_id' => $user->id,
+                        'quiz_id' => $question->id,
                         'user_answer' => $value === 'true' ? 1 : 0, //Si vrai ou Faux
                     ]);
                 }
 
                 // Vérifier si la réponse est correcte
-                if (($value === 'true' && $question->correct_answer) || ($value === 'false' && !$question->correct_answer)){
-                    $score ++;
+                if (($value === 'true' && $question->correct_answer) || ($value === 'false' && !$question->correct_answer)) {
+                    $score++;
                 }
             }
         }
 
+        UserQuizResult::create([
+            'user_id' => $user->id,
+            'quiz_id' => $question->id,
+            'score' => $score,
+            'played_at' => now(),
+        ]);
+
+        // Récupérer les résultats pour l'utilisateur
+        $quizResults = UserQuizResult::where('user_id', $user->id)
+            ->orderBy('played_at', 'asc')
+            ->get();
+
         // Rediriger avec le score
-        return redirect()->route('quizzes.dashboard')->with('score', $score);
+        // return redirect()->route('quizzes.dashboard')->with('score', $score);
+        // Passer les résultats à la vue dashboard
+        return view('quizzes.dashboard', compact('quizResults'))
+            ->with('score', $score);
     }
-  
+
+    public function dashboard()
+    {
+        $userId = auth()->user()->id;
+        $quizResults = UserQuizResult::where('user_id', $userId)
+            ->orderBy('played_at', 'asc')
+            ->get();
+
+        dd($quizResults);
+        return view('quizzes.dashboard', compact('quizResults'));
+    }
+
     /**
      * Show the form for creating a new resource.
      * Afficher le formulaire de création d'un quizz
@@ -110,25 +137,25 @@ class QuizController extends Controller
      * Display the specified resource.
      * Affiche une ressource spécifique
      */
-    public function show(Request $request) 
-{
-    // Récupérer l'index de la question courante depuis la session, avec 0 comme valeur par défaut
-    $questionCouranteIndex = $request->session()->get('questionIndex', 0);
+    public function show(Request $request)
+    {
+        // Récupérer l'index de la question courante depuis la session, avec 0 comme valeur par défaut
+        $questionCouranteIndex = $request->session()->get('questionIndex', 0);
 
-    // Récupérer la question courante en utilisant l'index
-    $quiz = Quizzes::skip($questionCouranteIndex)->first();
+        // Récupérer la question courante en utilisant l'index
+        $quiz = Quizzes::skip($questionCouranteIndex)->first();
 
-    // Si la question n'existe pas, rediriger vers le dashboard
-    if (!$quiz) {
-        return redirect()->route('quizzes.dashbord');
+        // Si la question n'existe pas, rediriger vers le dashboard
+        if (!$quiz) {
+            return redirect()->route('quizzes.dashbord');
+        }
+
+        // Passer la question et l'index à la vue
+        return view('quizzes.partials.index', [
+            'quiz' => $quiz,
+            'questionIndex' => $questionCouranteIndex
+        ]);
     }
-
-    // Passer la question et l'index à la vue
-    return view('quizzes.partials.index', [
-        'quiz' => $quiz, 
-        'questionIndex' => $questionCouranteIndex
-    ]);
-}
 
 
     /**
@@ -139,7 +166,7 @@ class QuizController extends Controller
     {
         // Trouver le quiz par ID
         $quizzes = Quizzes::findOrFail($id);
-        
+
         // Retourner la vue d'édition avec les quizzes
         // dd("hello");
         return view('quizzes.edit', compact('quizzes'));
@@ -254,7 +281,7 @@ class QuizController extends Controller
     //         session()->flash('error', 'Mauvaise réponse !');
     //         return redirect()->route('')->with('error', "Incorrect! la bonne réponse est $correctAnswerText. {$quiz->explanation}");
     //     }
-        
+
     // }
 
     // public function saveAnswer(Request $request)
@@ -302,31 +329,30 @@ class QuizController extends Controller
     // }
 
     public function submitAnswer(Request $request)
-{
-    // Validation de la réponse
-    $request->validate([
-        'answer' => 'required|boolean'
-    ]);
+    {
+        // Validation de la réponse
+        $request->validate([
+            'answer' => 'required|boolean'
+        ]);
 
-    // Récupérer l'index de la question courante depuis la session
-    $questionCouranteIndex = $request->session()->get('questionIndex', 0);
+        // Récupérer l'index de la question courante depuis la session
+        $questionCouranteIndex = $request->session()->get('questionIndex', 0);
 
-    // Récupérer la question courante
-    $quiz = Quizzes::skip($questionCouranteIndex)->first();
-    $isCorrect = $request->answer == $quiz->correct_answer;
+        // Récupérer la question courante
+        $quiz = Quizzes::skip($questionCouranteIndex)->first();
+        $isCorrect = $request->answer == $quiz->correct_answer;
 
-    // Stocker la réponse ou le score ici
+        // Stocker la réponse ou le score ici
 
-    // Incrémenter l'index pour la prochaine question
-    $request->session()->put('questionIndex', $questionCouranteIndex + 1);
+        // Incrémenter l'index pour la prochaine question
+        $request->session()->put('questionIndex', $questionCouranteIndex + 1);
 
-    // Vérifier si nous avons atteint la fin des questions
-    if ($questionCouranteIndex >= 9) { // Supposons que nous avons 10 questions
-        return redirect()->route('quizzes.dashboard');
+        // Vérifier si nous avons atteint la fin des questions
+        if ($questionCouranteIndex >= 9) { // Supposons que nous avons 10 questions
+            return redirect()->route('quizzes.dashboard');
+        }
+
+        // Rediriger vers la prochaine question
+        return redirect()->route('quizzes.show');
     }
-
-    // Rediriger vers la prochaine question
-    return redirect()->route('quizzes.show');
-}
-
 }
