@@ -25,6 +25,75 @@ class QuizController extends Controller
         return view('quizzes.partials.index', compact('quizzes'));
     }
 
+    public function calculateStars($score)
+    {
+        $stars = 0;
+        if ($score >= 9) {
+            $stars = 5;
+        } elseif ($score >= 7) {
+            $stars = 4;
+        } elseif ($score >= 5) {
+            $stars = 3;
+        } elseif ($score >= 3) {
+            $stars = 2;
+        } else {
+            $stars = 1;
+        }
+
+        return $stars;
+    }
+
+    public function getUserQuizResults($userId)
+    {
+        return UserQuizResult::where('user_id', $userId)
+            ->orderBy('played_at', 'desc')
+            ->take(5)
+            ->get()
+            ->sortBy('played_at'); // Tri ascendant après avoir récupéré les 5 derniers résultats
+    }
+
+
+//     public function submit(Request $request)
+// {
+//     $score = 0;
+//     $user = auth()->user();
+//     $data = $request->all();
+
+//     foreach ($data as $key => $value) {
+//         if (strpos($key, 'question_') === 0) {
+//             $questionId = str_replace('question_', '', $key);
+//             $question = Quizzes::find($questionId);
+
+//             if ($question) {
+//                 // Enregistrer la réponse de l'utilisateur
+//                 UserAnswer::create([
+//                     'user_id' => $user->id,
+//                     'quiz_id' => $question->id,
+//                     'user_answer' => $value === 'true' ? 1 : 0,
+//                 ]);
+
+//                 // Vérifier si la réponse est correcte
+//                 if (($value === 'true' && $question->correct_answer) || ($value === 'false' && !$question->correct_answer)) {
+//                     $score++;
+//                 }
+//             }
+//         }
+//     }
+
+//     // Enregistrer le résultat du quiz après avoir calculé le score
+    
+
+//     // Appel des méthodes pour gérer les étoiles et les résultats pour le graphe
+//     $stars = $this->calculateStars($score); // Calcul des étoiles
+//     $quizResults = $this->getUserQuizResults($user->id); // Récupération des derniers résultats
+//     // dd($quizResults);
+//     // dd($score);
+//     // Rediriger avec le score et les étoiles
+//     return view('quizzes.dashboard', compact('quizResults', 'score', 'stars'));
+// }
+
+
+
     public function submit(Request $request)
     {
         $score = 0;
@@ -45,6 +114,8 @@ class QuizController extends Controller
                     ]);
                 }
 
+               
+
                 // Vérifier si la réponse est correcte
                 if (($value === 'true' && $question->correct_answer) || ($value === 'false' && !$question->correct_answer)) {
                     $score++;
@@ -59,28 +130,25 @@ class QuizController extends Controller
             'played_at' => now(),
         ]);
 
-        // Récupérer les résultats pour l'utilisateur
-        $quizResults = UserQuizResult::where('user_id', $user->id)
-            ->orderBy('played_at', 'asc')
-            ->get();
+       
+
+
 
         // Rediriger avec le score
-        // return redirect()->route('quizzes.dashboard')->with('score', $score);
-        // Passer les résultats à la vue dashboard
-        return view('quizzes.dashboard', compact('quizResults'))
-            ->with('score', $score);
+        return redirect()->route('quizzes.dashboard')->with('score', $score);
+        
     }
 
-    public function dashboard()
-    {
-        $userId = auth()->user()->id;
-        $quizResults = UserQuizResult::where('user_id', $userId)
-            ->orderBy('played_at', 'asc')
-            ->get();
+    // public function dashboard()
+    // {
+    //     $userId = auth()->user()->id;
+    //     $quizResults = UserQuizResult::where('user_id', $userId)
+    //         ->orderBy('played_at', 'asc')
+    //         ->get();
 
-        dd($quizResults);
-        return view('quizzes.dashboard', compact('quizResults'));
-    }
+    //     dd($quizResults);
+    //     return view('quizzes.dashboard', compact('quizResults'));
+    // }
 
     /**
      * Show the form for creating a new resource.
